@@ -15,6 +15,21 @@ ALLOWED_HOSTS = ["*"]
 
 AUTH_USER_MODEL = "expense_models.CustomUser"
 
+APP_NAME = env("APP_NAME")
+
+ALGORITHM = env("ALGORITHM")
+
+TOKEN_EXPIRY = env("TOKEN_EXPIRY_LIFETIME")
+
+PAYSTACK_SECRET_KEY = env("PAYSTACK_SECRET_KEY")
+PAYSTACK_URI = env("PAYSTACK_URI")
+
+RETRIES = env("RETRIES")
+ATTEMPTS = env("ATTEMPTS")
+SLEEP = env("SLEEP")
+
+DOMAIN = env("DOMAIN")
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,6 +89,12 @@ DATABASES = {
 }
 
 
+# Authentication backends
+AUTHENTICATION_BACKENDS = [
+    'expense_models.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -119,6 +140,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
      'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
     ],
 # #     'DEFAULT_SCHEMA_CLASS': [
 # #         'drf_spectacular.openapi.AutoSchema'

@@ -1,16 +1,15 @@
 
 from datetime import datetime, timedelta
-from expence_tracker.settings import BASE_DIR
-import environ
-import os
-from rest_framework.response import Response
 import jwt
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+import logging
+from expence_tracker import settings
 
-EXPIRY_LIFETIME = env.int("TOKEN_EXPIRY_LIFETIME")
-ALGORITHM = env("ALGORITHM")
-SECRET_KEY = env("SECRET_KEY")
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+EXPIRY_LIFETIME = int(settings.TOKEN_EXPIRY)
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
 
 def encode_payload( sub : dict):
     payload = sub.copy()
@@ -22,7 +21,19 @@ def encode_payload( sub : dict):
         token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
         return token
     except jwt.InvalidKeyError as e:
-        print(e)
+        logging.error(e)
     except Exception as e:
-        print(e)
+        logging.error(e)
+
+
+def decode_payload(payload):
+    try:
+        sub = jwt.decode(payload, SECRET_KEY, algorithms=[ALGORITHM])
+        return (sub)
+        # email = sub.get("email")
+        # id = sub.get("id")
+    except Exception as e:
+        logging.error(e)
+    # return email, id
+
     
