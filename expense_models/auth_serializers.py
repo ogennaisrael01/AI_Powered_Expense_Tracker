@@ -3,6 +3,7 @@ import email_validator
 from django.contrib.auth.password_validation import validate_password as _validate
 from .auth_models import CustomUser
 from rest_framework.authtoken.models import Token
+from django.db.models import Q
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,7 +38,6 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=50)
     username = serializers.CharField(max_length=100)
     password = serializers.CharField(max_length=50, write_only=True)
-
 
 
 class PasswordRestSerializer(serializers.Serializer):
@@ -85,12 +85,17 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         
         return attrs
 
-
-
 class ProfileViewSerializer(serializers.ModelSerializer):
+    income_transaction = serializers.SerializerMethodField()
     class Meta:
         model = CustomUser
-        fields = ["email", "username", "first_name", "last_name", "is_verified", "currency", "income"]
+        fields = ["email", "username", "first_name", "last_name", "is_verified", "currency", "income", "income_transaction"]
+
+    def get_income_transaction(self, obj):
+        transactions = obj.transactions.all()
+        trans_asc_with_income = transactions.filter(Q(name__exact="Deposit") | Q(name__exact="Withdrawal"))
+        return trans_asc_with_income
+            
 
 class ProfileUdateSerializer(serializers.ModelSerializer):
     class Meta:

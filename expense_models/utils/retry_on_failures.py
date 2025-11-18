@@ -1,6 +1,6 @@
 import logging
 import time
-from expence_tracker import settings
+from expense_tracker import settings
 
 logging.basicConfig(level=logging.INFO)
 logger=logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def retry_on_failures(request):
                 }
         except Exception as e:
             logging.error("Error: ", e)
-            attempts += 1
+           
             if attempts < retries:
                 time.sleep(int(settings.SLEEP))
                 logging.warn(f"RETRYING: {attempts}......")
@@ -28,3 +28,4 @@ def retry_on_failures(request):
                     "success": False,
                     "message": "Maximum attempts Excedeed"
                 }
+        attempts += 1

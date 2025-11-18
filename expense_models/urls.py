@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .auth_views import (
     RegistrationViewset,
     LoginView,
@@ -6,16 +7,23 @@ from .auth_views import (
     RequestPasswordResetView,
     PasswordResetConfirmView,
     ProfileView
+
 )
 from .tracker_views import (
-    AccountView,
-    AccountRetreiveView,
+    AccountViewSet,
+    TransactionViewSet
 )
 from .payments_views import (
     DepositView,
-    VerifyView
+    VerifyView,
+    WithDrawView
 )
 from .views import health
+
+router = DefaultRouter()
+
+router.register(r'accounts', AccountViewSet, basename="account")
+router.register(r'transactions', TransactionViewSet, basename="transaction")
 
 urlpatterns = [
     path("health/", health, name="health"),
@@ -29,11 +37,14 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path("accounts/", AccountView.as_view(), name="accounts"),
-    path("accounts/<id>/", AccountRetreiveView.as_view(), name="account=detail")
+    path("", include(router.urls))
 ]
 
 urlpatterns += [
+    path("withdraw/", WithDrawView.as_view(), name="with=draw"),
     path("deposit/", DepositView.as_view(), name="deposit"),
     path("verify/payment", VerifyView.as_view(), name="verify-payments")
+]
+urlpatterns += [
+    path("auth/", include("rest_framework.urls"))
 ]

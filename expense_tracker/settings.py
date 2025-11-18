@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     # Third party apps
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_yasg',
+
+    #local apps 
     'expense_models',
-    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -56,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'expence_tracker.urls'
+ROOT_URLCONF = 'expense_tracker.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'expence_tracker.wsgi.application'
+WSGI_APPLICATION = 'expense_tracker.wsgi.application'
 
 
 # Database
@@ -141,9 +143,9 @@ REST_FRAMEWORK = {
      'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated'
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ],
 # #     'DEFAULT_SCHEMA_CLASS': [
 # #         'drf_spectacular.openapi.AutoSchema'
 # #     ]

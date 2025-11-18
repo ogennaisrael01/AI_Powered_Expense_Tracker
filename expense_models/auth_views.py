@@ -10,8 +10,13 @@ from .auth_serializers import (
 )
 from .utils.security import encode_payload, decode_payload
 from rest_framework.response import Response
-from .utils.email_utils import send_email_notification, account_verification_email, reset_password_email, password_reset_successful
-from expence_tracker.settings import DOMAIN
+from .utils.email_utils import (
+    send_email_notification, 
+    account_verification_email, 
+    reset_password_email, 
+    password_reset_successful
+)
+from expense_tracker.settings import DOMAIN
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
@@ -71,11 +76,13 @@ class RegistrationViewset(APIView):
                     "message": send_notif.get("message")
                 })
         
+    
 class LoginView(APIView):
     permission_classes = []
     http_method_names = ["post"]
     authentication_classes = []
     serializer_class =  LoginSerializer
+
 
 
     def post(self, request, *args, **kwargs):

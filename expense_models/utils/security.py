@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 import jwt
 import logging
-from expence_tracker import settings
+from expense_tracker import settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

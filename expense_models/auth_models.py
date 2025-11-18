@@ -30,7 +30,14 @@ class Currency(models.TextChoices):
     DOLLARS = "USD", "USD"
 
 class CustomUser(AbstractBaseUser):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, db_index=True, unique=True, max_length=20)
+    user_id = models.UUIDField(
+        primary_key=True, 
+        default=uuid.uuid4, 
+        db_index=True, 
+        unique=True, 
+        max_length=20,
+        null=False
+        )
     email = models.EmailField(max_length=50, unique=True, db_index=True)
     username = models.CharField(max_length=100)
     is_superuser = models.BooleanField(default=False)
@@ -39,9 +46,10 @@ class CustomUser(AbstractBaseUser):
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     currency = models.CharField(max_length=20, choices=Currency, default=Currency.NAIRA)
-    income = models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    income = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     date_created = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
     REQUIRED_FIELDS = []
     USERNAME_FIELD = "email"
@@ -54,4 +62,16 @@ class CustomUser(AbstractBaseUser):
         return False
     
     def __str__(self):
-        return f""
+        return f"{self.username} ===== {self.income}"
+
+    class Meta:
+        ordering = ["-date_created"]
+        db_table = "users"
+        indexes = [
+            models.Index(fields=["user_id"], name="id_idx"),
+            models.Index(fields=["email"], name="email_idx"),
+            models.Index(fields=["username"], name="username_idx"),
+            models.Index(fields=["currency"], name="currency_idx")
+        ]
+        verbose_name_plural = "users"
+
